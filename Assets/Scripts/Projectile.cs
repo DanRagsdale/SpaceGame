@@ -47,24 +47,21 @@ public class Projectile : MonoBehaviour
 		Vector3 initMovement = refTransform.TransformVector(velInitial);
 		Vector3 rotMovement = new Vector3(rotSpeed * transform.position.z, 0, -rotSpeed * transform.position.x);
 		
-		transform.Translate(Time.deltaTime * (rotMovement  + velMovement + initMovement), Space.World);
+		transform.Translate(Time.deltaTime * (rotMovement + velMovement + initMovement), Space.World);
     }
 
 	void OnDrawGizmos()
 	{
 		//Vector3 rotMovement = new Vector3(rotSpeed * transform.position.z, 0, -rotSpeed * transform.position.x);
 		//Vector3 velMovement = refTransform.TransformVector(Vector3.right);
-		Gizmos.color = Color.red;
-		Vector3 initMovement = refTransform.TransformVector(velInitial);
-		Gizmos.DrawRay(transform.position, initMovement);
-		
 		Gizmos.color = Color.green;
 		Vector3 rotMovement = new Vector3(rotSpeed * transform.position.z, 0, -rotSpeed * transform.position.x);
 		Gizmos.DrawRay(transform.position, rotMovement);
 		
-		Gizmos.color = Color.blue;
+		Gizmos.color = Color.red;
+		Vector3 initMovement = refTransform.TransformVector(velInitial);
 		Vector3 velMovement = refTransform.TransformVector(velRelative).normalized * 10;
-		Gizmos.DrawRay(transform.position, velMovement);
+		Gizmos.DrawRay(transform.position, initMovement + velMovement);
 	}
 
 	//void CheckCollisions(float moveStep)
