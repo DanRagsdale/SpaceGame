@@ -9,8 +9,8 @@ public class Projectile : MonoBehaviour
 
 	float rotSpeed;
 
-	float speed = 10.0f;
-	float damage = 1.0f;
+	public float speed = 400.0f;
+	public float damage = 1.0f;
 
 	float startTime;
 
@@ -46,7 +46,7 @@ public class Projectile : MonoBehaviour
 
 		float moveStep = speed * Time.deltaTime;
 
-		Vector3 velMovement = refTransform.TransformVector(velRelative)* 15;
+		Vector3 velMovement = refTransform.TransformVector(velRelative)* speed;
 		Vector3 initMovement = refTransform.TransformVector(velInitial);
 		Vector3 rotMovement = new Vector3(rotSpeed * transform.position.z, 0, -rotSpeed * transform.position.x);
 
@@ -67,7 +67,7 @@ public class Projectile : MonoBehaviour
 		
 		Gizmos.color = Color.red;
 		Vector3 initMovement = refTransform.TransformVector(velInitial);
-		Vector3 velMovement = refTransform.TransformVector(velRelative).normalized * 10;
+		Vector3 velMovement = refTransform.TransformVector(velRelative).normalized * 15;
 		Gizmos.DrawRay(transform.position, initMovement + velMovement);
 
 		Gizmos.color = Color.black;

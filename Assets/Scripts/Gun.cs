@@ -18,4 +18,9 @@ public class Gun : MonoBehaviour
 			Projectile newProjectile = Instantiate(bullet, muzzle.position, muzzle.rotation) as Projectile;
 		}
 	}
+
+	public void SetMuzzle(Transform newMuzzle)
+	{
+		muzzle = newMuzzle;
+	}
 }

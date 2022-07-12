@@ -5,15 +5,18 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
 	public Transform weaponHold;	
-	public Gun startingGun;
+	public Transform crosshair;
+
+	public Gun[] guns;
+	int weaponIndex = 0;
 
 	Gun equippedGun;
 
 	void Start()
 	{
-		if (startingGun != null)
+		if (guns[0] != null)
 		{
-			EquipGun(startingGun);
+			EquipGun(guns[0]);
 		}
 	}
 
@@ -23,7 +26,10 @@ public class GunController : MonoBehaviour
 		{
 			Shoot();
 		}
-
+		if (Input.GetButtonDown("Change")){
+			weaponIndex = (weaponIndex + 1 ) % guns.Length;
+			EquipGun(guns[weaponIndex]);
+		}
 	}
 
     public void EquipGun(Gun gunToEquip)
@@ -34,6 +40,7 @@ public class GunController : MonoBehaviour
 		}
 		equippedGun = Instantiate (gunToEquip, weaponHold.position, weaponHold.rotation) as Gun;
 		equippedGun.transform.parent = weaponHold;
+		equippedGun.SetMuzzle(crosshair);
 	}
 
 	public void Shoot() 
