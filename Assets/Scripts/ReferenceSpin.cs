@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ReferenceSpin : MonoBehaviour
 {
-	public float RotationSpeed = 30;
+	public float RotationSpeed = 30.0f;
 
     void Start()
     {
@@ -14,5 +14,6 @@ public class ReferenceSpin : MonoBehaviour
     void Update()
     {
 		transform.RotateAround(transform.position, Vector3.up, RotationSpeed * Time.deltaTime);
+		RenderSettings.skybox.SetFloat("_Rotation", -Time.time * RotationSpeed);
     }
 }

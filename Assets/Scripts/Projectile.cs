@@ -21,6 +21,7 @@ public class Projectile : MonoBehaviour
 	Vector3 velRelative;
 	Vector3 velInitial;
 
+	Vector3 posInitial;
 
 	void Start()
 	{
@@ -32,6 +33,8 @@ public class Projectile : MonoBehaviour
 		startTime = Time.time;
 		velRelative = refTransform.InverseTransformVector(transform.TransformVector(Vector3.forward).normalized);
 		velInitial = refTransform.InverseTransformVector(new Vector3(-rotSpeed * transform.position.z, 0, rotSpeed * transform.position.x));
+
+		posInitial = refTransform.InverseTransformPoint(transform.position);
 	}
 
     void Update()
@@ -46,8 +49,12 @@ public class Projectile : MonoBehaviour
 		Vector3 velMovement = refTransform.TransformVector(velRelative)* 15;
 		Vector3 initMovement = refTransform.TransformVector(velInitial);
 		Vector3 rotMovement = new Vector3(rotSpeed * transform.position.z, 0, -rotSpeed * transform.position.x);
-		
-		transform.Translate(Time.deltaTime * (rotMovement + velMovement + initMovement), Space.World);
+
+		Vector3 totalMovement = Time.deltaTime * (velMovement + initMovement + rotMovement);
+
+		CheckCollisions(totalMovement);
+
+		transform.Translate(totalMovement, Space.World);
     }
 
 	void OnDrawGizmos()
@@ -62,21 +69,25 @@ public class Projectile : MonoBehaviour
 		Vector3 initMovement = refTransform.TransformVector(velInitial);
 		Vector3 velMovement = refTransform.TransformVector(velRelative).normalized * 10;
 		Gizmos.DrawRay(transform.position, initMovement + velMovement);
+
+		Gizmos.color = Color.black;
+		Gizmos.DrawRay(transform.position, refTransform.TransformPoint(posInitial) - transform.position);
 	}
 
-	//void CheckCollisions(float moveStep)
-	//{
-	//	Ray ray = new Ray(transform.position, transform.forward);
-	//	RaycastHit hit;
+	void CheckCollisions(Vector3 nextStep)
+	{
+		Ray ray = new Ray(transform.position, nextStep);
+		RaycastHit hit;
 
-	//	if (Physics.Raycast(ray, out hit, moveStep, collisionMask, QueryTriggerInteraction.Collide))
-	//	{
-	//		IDamageable hitDamageable = hit.collider.GetComponent<IDamageable>();
-	//		if(hitDamageable != null)
-	//		{
-	//			hitDamageable.TakeHit(damage, hit);
-	//		}
-	//		GameObject.Destroy (gameObject);	
-	//	}
-	//}
+		if (Physics.Raycast(ray, out hit, nextStep.magnitude, collisionMask, QueryTriggerInteraction.Collide))
+		{
+			//IDamageable hitDamageable = hit.collider.GetComponent<IDamageable>();
+			//if(hitDamageable != null)
+			//{
+			//	hitDamageable.TakeHit(damage, hit);
+			//}
+			GameObject.Destroy (gameObject);	
+			Debug.Log("Collision Detected");
+		}
+	}
 }

@@ -43,14 +43,15 @@ public class FPController : MonoBehaviour
     }
 
 
-
+	float lastJump = 0.0f;
 
     void Update()
     {
 
-		Ray ray = new Ray(transform.position, -transform.up);
-		RaycastHit hit;
-		bool isGrounded = Physics.Raycast(ray, out hit, 1.05f, groundMask, QueryTriggerInteraction.Collide);
+		Ray groundRay = new Ray(transform.position - 0.3f * transform.up, -transform.up);
+		RaycastHit groundHit;
+		bool isGrounded = Physics.Raycast(groundRay, out groundHit, 1.0f, groundMask, QueryTriggerInteraction.Collide);
+
 
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
@@ -62,10 +63,14 @@ public class FPController : MonoBehaviour
 
 
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+		if(Input.GetButton("Jump"))
+		{
+			lastJump = Time.time;
+		}
 
-        // Simple test gravity. Need to update to properly account for rotation effects
-		if(isGrounded && Input.GetButton("Jump")){
+		if(isGrounded && Time.time - lastJump < 0.1f){
 			velInitial = refTransform.InverseTransformVector(jumpSpeed * transform.up + new Vector3(-rotSpeed * transform.position.z, 0, rotSpeed * transform.position.x));
+
 		} else if(isGrounded) {
 			velInitial = refTransform.InverseTransformVector(new Vector3(-rotSpeed * transform.position.z, 0, rotSpeed * transform.position.x));
 		}
@@ -103,6 +108,6 @@ public class FPController : MonoBehaviour
 	void OnDrawGizmos()
 	{
 		Gizmos.color = Color.red;
-		Gizmos.DrawRay(transform.position, -1.2f * transform.up);
+		Gizmos.DrawRay(transform.position - 0.6f * transform.up, -0.7f * transform.up);
 	}
 }
