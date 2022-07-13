@@ -27,8 +27,13 @@ public class GunController : MonoBehaviour
 			Shoot();
 		}
 		if (Input.GetButtonDown("Change")){
-			weaponIndex = (weaponIndex + 1 ) % guns.Length;
-			EquipGun(guns[weaponIndex]);
+			weaponIndex = (weaponIndex + 1 ) % (guns.Length + 1);
+			if(weaponIndex == guns.Length)
+			{
+				HolsterGun();
+			} else {
+				EquipGun(guns[weaponIndex]);
+			}
 		}
 	}
 
@@ -38,9 +43,17 @@ public class GunController : MonoBehaviour
 		{
 			Destroy(equippedGun.gameObject);
 		}
-		equippedGun = Instantiate (gunToEquip, weaponHold.position, weaponHold.rotation) as Gun;
+		equippedGun = Instantiate (gunToEquip, weaponHold.position, weaponHold.rotation * gunToEquip.transform.rotation) as Gun;
 		equippedGun.transform.parent = weaponHold;
 		equippedGun.SetMuzzle(crosshair);
+	}
+
+	public void HolsterGun()
+	{
+		if (equippedGun != null)
+		{
+			Destroy(equippedGun.gameObject);
+		}
 	}
 
 	public void Shoot() 
